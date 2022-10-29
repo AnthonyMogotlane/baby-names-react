@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import ListOfNames from './ListOfNames';
+import babyNamesData from "./data/babyNamesData.json"
+import Search from './Search';
+import { useEffect, useState } from 'react';
 
 function App() {
+  //Sorted data
+  const data = [...babyNamesData].sort((a, b) => a.name > b.name ? 1 : -1);
+
+  const [babyNames, setBabyNames] = useState(data);
+
+  const searchBabyName = (e) => {
+    e.target.value = e.target.value.toLowerCase();
+    setBabyNames(data.filter(obj =>  e.target.value === "" ? obj : (obj.name.toLowerCase().startsWith(e.target.value)) ? obj : ""));
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container app'>
+      <div className='row d-flex justify-content-center'>
+        <div className='col-10'>
+          <h2>Baby Names</h2>
+          <Search onkeydown={searchBabyName} />
+          <ListOfNames data={babyNames} />
+        </div>
+      </div>
     </div>
   );
 }
